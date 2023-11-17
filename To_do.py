@@ -1,81 +1,69 @@
 from tkinter import *
 
-def wczytaj_zadania():
+def ladowanie():
     try:
-        with open('zadania.txt', 'r') as plik:
-            zadania = [linia.strip().split(" | ") for linia in plik.readlines()]
-        return zadania
+        with open('tasks.txt', 'r') as file:
+            tasks = [line.strip() for line in file.readlines()]
+        return tasks
     except FileNotFoundError:
         return []
 
-def zapisz_zadania(zadania):
-    with open('zadania.txt', 'w') as plik:
-        for zadanie in zadania:
-            plik.write(" | ".join(zadanie) + "\n")
+def zapisz_zadania(tasks):
+    with open('tasks.txt', 'w') as file:
+        for task in tasks:
+            file.write(f"{task}\n")
 
-def dodaj_zadanie(entry, listbox, zadania, kryteria):
-    nowe_zadanie = entry.get()
-    if nowe_zadanie:
-        kryteria_entry = [k.get() for k in kryteria]
-        zadania.append([nowe_zadanie] + kryteria_entry)
-        listbox.insert(END, f"{len(zadania)}. {nowe_zadanie}")
-        zapisz_zadania(zadania)
+def dodaj_zadanie(entry, listbox, tasks):
+    new_task = entry.get()
+    if new_task:
+        tasks.append(new_task)
+        listbox.insert(END, f"{len(tasks)}. {new_task}")
+        dodaj_zadanie(tasks)
         entry.delete(0, END)
-        for k in kryteria:
-            k.delete(0, END)
 
-def usun_zadanie(listbox, zadania):
-    indeks_wybrany = listbox.curselection()
-    if indeks_wybrany:
-        indeks = indeks_wybrany[0]
-        del zadania[indeks]
-        listbox.delete(indeks)
-        zapisz_zadania(zadania)
+def usun_zadanie(listbox, tasks):
+    selected_index = listbox.curselection()
+    if selected_index:
+        index = selected_index[0]
+        del tasks[index]
+        listbox.delete(selected_index)
+        zapisz_zadania(tasks)
 
-def oznacz_wykonane(listbox, zadania):
-    indeks_wybrany = listbox.curselection()
-    if indeks_wybrany:
-        indeks = indeks_wybrany[0]
-        zadanie = zadania[indeks]
-        if not zadanie[0].startswith("[Wykonane] "):
-            zadania[indeks][0] = f"[Wykonane] {zadanie[0]}"
-            listbox.delete(indeks)
-            listbox.insert(END, zadania[indeks][0])
-            zapisz_zadania(zadania)
+def zakonczone(listbox, tasks):
+    selected_index = listbox.curselection()
+    if selected_index:
+        index = selected_index[0]
+        task = tasks[index]
+        if not task.startswith("[Done] "):
+            tasks[index] = f"[Done] {task}"
+            listbox.delete(selected_index)
+            listbox.insert(END, tasks[index])
+            zapisz_zadania(tasks)
 
 def main():
     root = Tk()
-    root.title('Lista Zadañ')
-    root.geometry('500x400')
+    root.title('ToDo List')
+    root.geometry('400x400')
 
-    zadania = wczytaj_zadania()
+    tasks = ladowanie()
 
-    listbox = Listbox(root, selectbackground='Gold', font=('Helvetica', 12), height=15, width=50)
+    listbox = Listbox(root, selectbackground='Gold', font=('Helvetica', 12), height=15, width=40)
     listbox.pack(pady=10)
 
-    for i, zadanie in enumerate(zadania, start=1):
-        listbox.insert(END, f"{i}. {zadanie[0]}")
+    for i, task in enumerate(tasks, start=1):
+        listbox.insert(END, f"{i}. {task}")
 
-    entry = Entry(root, width=50)
+    entry = Entry(root, width=40)
     entry.pack(pady=10)
 
-    kryteria_label = Label(root, text="Kryteria:", font=('Helvetica', 12))
-    kryteria_label.pack()
+    add_button = Button(root, text='Dodaj zadanie', command=lambda: dodaj_zadanie(entry, listbox, tasks))
+    add_button.pack(side=LEFT, padx=10)
 
-    kryteria = []
-    for i in range(4):
-        k = Entry(root, width=50)
-        k.pack()
-        kryteria.append(k)
+    delete_button = Button(root, text='Usun zadanie', command=lambda: usun_zadanie(listbox, tasks))
+    delete_button.pack(side=LEFT, padx=10)
 
-    dodaj_button = Button(root, text='Dodaj Zadanie', command=lambda: dodaj_zadanie(entry, listbox, zadania, kryteria))
-    dodaj_button.pack(side=LEFT, padx=10)
-
-    usun_button = Button(root, text='Usuñ Zadanie', command=lambda: usun_zadanie(listbox, zadania))
-    usun_button.pack(side=LEFT, padx=10)
-
-    wykonane_button = Button(root, text='Oznacz Wykonane', command=lambda: oznacz_wykonane(listbox, zadania))
-    wykonane_button.pack(side=LEFT, padx=10)
+    done_button = Button(root, text='Zakonczone', command=lambda: zakonczone(listbox, tasks))
+    done_button.pack(side=LEFT, padx=10)
 
     root.mainloop()
 
