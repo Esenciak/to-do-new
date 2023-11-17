@@ -1,68 +1,68 @@
 from tkinter import *
 
-def Zaladuj():
+def load_tasks():
     try:
         with open('tasks.txt', 'r') as file:
-            zadanie = [line.strip() for line in file.readlines()]
-        return zadanie
+            tasks = [line.strip() for line in file.readlines()]
+        return tasks
     except FileNotFoundError:
         return []
 
-def zapisz(zadanie):
+def save_tasks(tasks):
     with open('tasks.txt', 'w') as file:
-        for task in zadanie:
-            file.write(f"{zadanie}\n")
+        for task in tasks:
+            file.write(f"{task}\n")
 
-def dodaj(entry, listbox, zadanie):
+def add_task(entry, listbox, tasks):
     new_task = entry.get()
     if new_task:
-        zadanie.append(new_task)
-        listbox.insert(END, f"{len(zadanie)}. {new_task}")
-        zapisz(zadanie)
+        tasks.append(new_task)
+        listbox.insert(END, f"{len(tasks)}. {new_task}")
+        save_tasks(tasks)
         entry.delete(0, END)
 
-def usun(listbox, zadanie):
+def delete_task(listbox, tasks):
     selected_index = listbox.curselection()
     if selected_index:
         index = selected_index[0]
-        del zadanie[index]
+        del tasks[index]
         listbox.delete(selected_index)
-        zapisz(zadanie)
+        save_tasks(tasks)
 
-def zaznacz(listbox, zadanie):
+def mark_done(listbox, tasks):
     selected_index = listbox.curselection()
     if selected_index:
         index = selected_index[0]
-        task = zadanie[index]
+        task = tasks[index]
         if not task.startswith("[Done] "):
-            zadanie[index] = f"[Done] {task}"
+            tasks[index] = f"[Done] {task}"
             listbox.delete(selected_index)
-            listbox.insert(END, zadanie[index])
-            zapisz(zadanie)
+            listbox.insert(END, tasks[index])
+            save_tasks(tasks)
 
 def main():
     root = Tk()
     root.title('ToDo List')
     root.geometry('400x400')
 
-    zadanie = Zaladuj()
+    tasks = load_tasks()
 
     listbox = Listbox(root, selectbackground='Gold', font=('Helvetica', 12), height=15, width=40)
     listbox.pack(pady=10)
 
-    for i, task in enumerate(zadanie, start=1):
+    for i, task in enumerate(tasks, start=1):
         listbox.insert(END, f"{i}. {task}")
 
     entry = Entry(root, width=40)
     entry.pack(pady=10)
 
-    add_button = Button(root, text='Add Task', command=lambda: dodaj(entry, listbox, zadanie))
+    add_button = Button(root, text='Add Task', command=lambda: add_task(entry, listbox, tasks))
     add_button.pack(side=LEFT, padx=10)
 
-    delete_button = Button(root, text='Delete Task', command=lambda: usun(listbox, zadanie))
+    delete_button = Button(root, text='Delete Task', command=lambda: delete_task(listbox, tasks))
     delete_button.pack(side=LEFT, padx=10)
 
-    done_button = Button(root, text='Mark Done', command=lambda: zaznacz(listbox, zadanie))
+    done_button = Button(root, text='Mark Done', command=lambda: mark_done(listbox, tasks))
     done_button.pack(side=LEFT, padx=10)
 
     root.mainloop()
