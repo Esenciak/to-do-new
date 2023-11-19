@@ -12,13 +12,13 @@ def zapisz_zadania(tasks):
     with open('tasks.txt', 'w') as file:
         for task in tasks:
             file.write(f"{task}\n")
-
+        
 def dodaj_zadanie(entry, listbox, tasks):
     new_task = entry.get()
     if new_task:
         tasks.append(new_task)
         listbox.insert(END, f"{len(tasks)}. {new_task}")
-        dodaj_zadanie(tasks)
+        zapisz_zadania(tasks)
         entry.delete(0, END)
 
 def usun_zadanie(listbox, tasks):
