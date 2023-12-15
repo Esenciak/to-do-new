@@ -1,4 +1,5 @@
 Pojsc do szkoly
-Kupiæ Dynie
+[Done] Kupiæ Dynie
 [Done] Zamowic karme dla psa
 [Done] Skonczyc aplikacje
+[Done] Wygraæ turniej
