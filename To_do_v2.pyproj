@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>831f6658-8a34-4187-bf8b-c0cd6dc0b045</ProjectGuid>
+    <ProjectGuid>7fe0e758-8f73-47bb-9d9b-015dc471ca92</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>To_do.py</StartupFile>
+    <StartupFile>To_do_v2.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>To_do</Name>
-    <RootNamespace>To_do</RootNamespace>
+    <Name>To_do_v2</Name>
+    <RootNamespace>To_do_v2</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,9 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\to-do\To_do.py">
-      <Link>To_do.py</Link>
-    </Compile>
+    <Compile Include="To_do_v2.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
